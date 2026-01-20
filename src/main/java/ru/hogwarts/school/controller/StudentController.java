@@ -63,8 +63,8 @@ public class StudentController {
         }
         return ResponseEntity.ok(studentService.getAll());
     }
-    @GetMapping()
-    public ResponseEntity<Collection<Student>> getAgeBetween(){
-        return null;
-    }
+//    @GetMapping()
+//    public ResponseEntity<Collection<Student>> getAgeBetween(){
+//        return null;
+//    }
 }
