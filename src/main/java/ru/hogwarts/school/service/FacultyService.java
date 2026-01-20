@@ -37,15 +37,13 @@ public class FacultyService {
     }
 
     //delete
-    public Faculty deleteFaculty(Faculty faculty) {
-        faculties.remove(faculty.getId());
-        return faculty;
+    public Faculty deleteFaculty(long id) {
+        return  faculties.remove(id);
     }
 
     public Collection<Faculty> filterColor(String color) {
         return faculties.entrySet().stream()
                 .filter(element -> element.getValue().getColor().equals(color))
-                .peek(System.out::println)
                 .map(element -> findFaculty(element.getKey()))
                 .collect(Collectors.toList());
     }
