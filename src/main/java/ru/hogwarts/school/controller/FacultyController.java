@@ -7,6 +7,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("faculty")
@@ -25,7 +26,7 @@ public class FacultyController {
     @GetMapping("{id}")
     public ResponseEntity<Faculty> getFacultyInfo(@PathVariable long id) {
         Faculty faculty = facultyService.findFaculty(id);
-        if (faculty == null){
+        if (faculty == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(faculty);
@@ -34,20 +35,24 @@ public class FacultyController {
     @PutMapping()
     public ResponseEntity<Faculty> updateFaculty(@RequestBody Faculty faculty) {
         Faculty faculty1 = facultyService.updateFaculty(faculty);
-        if(faculty==null){
+        if (faculty == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(faculty);
     }
 
-    @DeleteMapping
-    public Faculty deleteFaculty(@RequestBody Faculty faculty) {
-        return facultyService.deleteFaculty(faculty);
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteFaculty(@PathVariable long id) {
+        facultyService.deleteFaculty(id);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/filter/{color")
-    public Collection<Faculty> filterAge(@RequestParam  String color){
-        return facultyService.filterColor(color);
+    @GetMapping()
+    public ResponseEntity<Collection<Faculty>> filterAge(@RequestParam(required = false) String color) {
+        if (color != null && !color.isBlank()) {
+            return ResponseEntity.ok(facultyService.filterColor(color));
+        }
+        return ResponseEntity.ok(Collections.emptyList());
     }
 
 }

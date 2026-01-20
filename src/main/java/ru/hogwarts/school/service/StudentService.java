@@ -27,7 +27,7 @@ public class StudentService {
 
     //update
     public Student updateStudent(Student student) {
-        if (students.containsKey(student.getId())) {
+        if (!students.containsKey(student.getId())) {
             return null;
         }
         students.put(student.getId(), student);
@@ -35,15 +35,13 @@ public class StudentService {
     }
 
     //delete
-    public Student deleteStudent(Student student) {
-        students.remove(student.getId());
-        return student;
+    public Student deleteStudent(Long id) {
+        return  students.remove(id);
     }
 
     public Collection<Student> filterAge(int age) {
         return students.entrySet().stream()
                 .filter(element -> element.getValue().getAge() == age)
-                .peek(System.out::println)
                 .map(element -> findStudent(element.getKey()))
                 .collect(Collectors.toList());
     }
