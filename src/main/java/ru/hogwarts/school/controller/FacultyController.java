@@ -49,11 +49,14 @@ public class FacultyController {
     @GetMapping()
     public ResponseEntity<Collection<Faculty>> filterColor(@RequestParam(required = false) String color,
                                                            @RequestParam(required = false) String find) {
+        if (color != null && !color.isBlank()) {
+            return ResponseEntity.ok(facultyService.filterColor(color));
+        }
         if (find != null && !find.isBlank()) {
            return ResponseEntity.ok(facultyService.findByNameContainsIgnoreCaseOrColorIgnoreCase(find));
         }
-        if (color != null && !color.isBlank()) {
-            return ResponseEntity.ok(facultyService.filterColor(color));
+        if (color == null && find == null){
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(Collections.emptyList());
     }
