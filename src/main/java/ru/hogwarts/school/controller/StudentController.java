@@ -3,7 +3,9 @@ package ru.hogwarts.school.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
@@ -13,10 +15,16 @@ import java.util.Collections;
 @RequestMapping("student")
 public class StudentController {
     private final StudentService studentService;
+    private final FacultyService facultyService;
 
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, FacultyService facultyService) {
         this.studentService = studentService;
+        this.facultyService = facultyService;
     }
+
+//    public StudentController(StudentService studentService) {
+//        this.studentService = studentService;
+//    }
 
     @PostMapping()
     public Student createStudent(@RequestBody Student student) {
@@ -50,7 +58,13 @@ public class StudentController {
     @GetMapping()
     public ResponseEntity<Collection<Student>> filterAge(@RequestParam(required = false) Integer age,
                                                          @RequestParam(required = false) Integer min,
-                                                         @RequestParam(required = false) Integer max) {
+                                                         @RequestParam(required = false) Integer max,
+                                                         @RequestParam(required = false) Integer idFaculty) {
+        if (idFaculty != null && idFaculty.longValue() > 0) {
+            Faculty faculty =   facultyService.findFaculty(idFaculty);
+            faculty.getStudents();
+            return ResponseEntity.ok(facultyService.findFaculty(idFaculty).getStudents());
+        }
         if (age != null && age.intValue() > 0) {
             return ResponseEntity.ok(studentService.filterAge(age));
         }

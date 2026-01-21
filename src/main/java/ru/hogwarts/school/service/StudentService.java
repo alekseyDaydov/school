@@ -47,6 +47,6 @@ public class StudentService {
     }
 
     public Student getById(int id){
-        return studentRepository.findById(id).get();
+        return studentRepository.findFacultyById(id).get();
     }
 }

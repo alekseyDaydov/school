@@ -7,6 +7,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -78,11 +79,8 @@ public class FacultyController {
         }
 
         if (idStudent != null && idStudent.longValue() > 0) {
-            Student student = studentService.getById(idStudent.intValue());
-            if (student != null ) {
-                return ResponseEntity.ok(student.getFaculty());
-            }
-//            return ResponseEntity.badRequest().build();
+         Collection<Student> students =   facultyService.findFaculty(idStudent).getStudents();
+            return ResponseEntity.ok(Collections.emptyList());
         }
 
         if (color == null && find == null) {
