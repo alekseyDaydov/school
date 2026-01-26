@@ -10,6 +10,7 @@ import ru.hogwarts.school.service.StudentService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 @RestController
 @RequestMapping("faculty")
@@ -21,10 +22,6 @@ public class FacultyController {
         this.facultyService = facultyService;
         this.studentService = studentService;
     }
-//
-//    public FacultyController(FacultyService facultyService) {
-//        this.facultyService = facultyService;
-//    }
 
     @PostMapping()
     public Faculty createFaculty(@RequestBody Faculty faculty) {
@@ -32,15 +29,8 @@ public class FacultyController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Faculty> getFacultyInfo(@PathVariable(required = false) Long id,
-                                                  @PathVariable(required = false) Long idStudent) {
+    public ResponseEntity<Faculty> getFacultyInfo(@PathVariable(required = false) Long id) {
         Faculty faculty = null;
-        if (idStudent != null && idStudent.longValue() > 0) {
-            Student student = studentService.getById(idStudent.intValue());
-            if (student != null && student.getId() > 0) {
-                faculty = facultyService.findFaculty(student.getId());
-            }
-        }
         if (id != null && id > 0) {
             faculty = facultyService.findFaculty(id);
         }
@@ -54,11 +44,11 @@ public class FacultyController {
 
     @PutMapping()
     public ResponseEntity<Faculty> updateFaculty(@RequestBody Faculty faculty) {
-        Faculty faculty1 = facultyService.updateFaculty(faculty);
-        if (faculty == null) {
+        Faculty editFaculty = facultyService.updateFaculty(faculty);
+        if (editFaculty == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(faculty);
+        return ResponseEntity.ok(editFaculty);
     }
 
     @DeleteMapping("{id}")
@@ -68,9 +58,7 @@ public class FacultyController {
     }
 
     @GetMapping()
-    public ResponseEntity<Collection<Faculty>> filterColor(@RequestParam(required = false) String color,
-                                                           @RequestParam(required = false) String find,
-                                                           @RequestParam(required = false) Integer idStudent) {
+    public ResponseEntity<Collection<Faculty>> filterColor(@RequestParam(required = false) String color, @RequestParam(required = false) String find, @RequestParam(required = false) Integer idStudent) {
         if (color != null && !color.isBlank()) {
             return ResponseEntity.ok(facultyService.filterColor(color));
         }
@@ -79,13 +67,13 @@ public class FacultyController {
         }
 
         if (idStudent != null && idStudent.longValue() > 0) {
-         Collection<Student> students =   facultyService.findFaculty(idStudent).getStudents();
-            return ResponseEntity.ok(Collections.emptyList());
+            return ResponseEntity.ok(Set.of(studentService.getById(idStudent).getFaculty()));
         }
 
-        if (color == null && find == null) {
+        if (color == null && find == null && idStudent == null) {
             return ResponseEntity.badRequest().build();
         }
+
         return ResponseEntity.ok(Collections.emptyList());
     }
 
@@ -97,5 +85,4 @@ public class FacultyController {
         }
         return ResponseEntity.ok(faculties);
     }
-
 }

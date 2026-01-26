@@ -22,10 +22,6 @@ public class StudentController {
         this.facultyService = facultyService;
     }
 
-//    public StudentController(StudentService studentService) {
-//        this.studentService = studentService;
-//    }
-
     @PostMapping()
     public Student createStudent(@RequestBody Student student) {
         return studentService.createStudent(student);
@@ -61,8 +57,6 @@ public class StudentController {
                                                          @RequestParam(required = false) Integer max,
                                                          @RequestParam(required = false) Integer idFaculty) {
         if (idFaculty != null && idFaculty.longValue() > 0) {
-            Faculty faculty =   facultyService.findFaculty(idFaculty);
-            faculty.getStudents();
             return ResponseEntity.ok(facultyService.findFaculty(idFaculty).getStudents());
         }
         if (age != null && age.intValue() > 0) {
