@@ -67,6 +67,7 @@ public class StudentService {
     public Avatar findAvatar(long studentId) {
         return avatarRepository.findByStudentId(studentId).orElseThrow();
     }
+
     public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
         Student student = findByStudent(studentId);
 

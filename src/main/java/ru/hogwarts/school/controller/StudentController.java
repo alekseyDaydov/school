@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.model.Avatar;
@@ -23,6 +24,7 @@ import java.util.Collections;
 
 @RestController
 @RequestMapping("student")
+@Transactional
 public class StudentController {
     private final StudentService studentService;
     private final FacultyService facultyService;
@@ -31,10 +33,6 @@ public class StudentController {
         this.studentService = studentService;
         this.facultyService = facultyService;
     }
-
-//    public StudentController(StudentService studentService) {
-//        this.studentService = studentService;
-//    }
 
     @PostMapping()
     public Student createStudent(@RequestBody Student student) {
