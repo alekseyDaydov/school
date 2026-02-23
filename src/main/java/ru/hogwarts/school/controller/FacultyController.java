@@ -21,10 +21,6 @@ public class FacultyController {
         this.facultyService = facultyService;
         this.studentService = studentService;
     }
-//
-//    public FacultyController(FacultyService facultyService) {
-//        this.facultyService = facultyService;
-//    }
 
     @PostMapping()
     public Faculty createFaculty(@RequestBody Faculty faculty) {
@@ -32,15 +28,8 @@ public class FacultyController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Faculty> getFacultyInfo(@PathVariable(required = false) Long id,
-                                                  @PathVariable(required = false) Long idStudent) {
-        Faculty faculty = null;
-        if (idStudent != null && idStudent.longValue() > 0) {
-            Student student = studentService.getById(idStudent.intValue());
-            if (student != null && student.getId() > 0) {
-                faculty = facultyService.findFaculty(student.getId());
-            }
-        }
+    public ResponseEntity<Faculty> getFacultyInfo(@PathVariable(required = false) Long id) {
+       Faculty faculty = new Faculty() ;
         if (id != null && id > 0) {
             faculty = facultyService.findFaculty(id);
         }
