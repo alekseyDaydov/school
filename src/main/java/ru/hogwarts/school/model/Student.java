@@ -2,6 +2,7 @@ package ru.hogwarts.school.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -9,25 +10,31 @@ import java.util.Objects;
 @Entity
 public class Student {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_seq")
+    private Long id;
     private String name;
     private int age;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "faculty_id")
-    @JsonBackReference
+    @JsonManagedReference
     private Faculty faculty;
 
     public Student() {
     }
 
-    public Student(long id, String name, int age, Faculty faculty) {
-        this.id = id;
+    public Student(String name, int age) {
         this.name = name;
         this.age = age;
-        this.faculty = faculty;
     }
+
+//    public Student(long id, String name, int age, Faculty faculty) {
+//        this.id = id;
+//        this.name = name;
+//        this.age = age;
+//        this.faculty = faculty;
+//    }
+
 
     public Faculty getFaculty() {
         return faculty;

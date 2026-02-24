@@ -32,7 +32,7 @@ public class FacultyService {
 
     //delete
     public void deleteFaculty(long id) {
-        facultyRepository.deleteById(id);
+       facultyRepository.deleteById(id);
     }
 
     public Collection<Faculty> filterColor(String color) {

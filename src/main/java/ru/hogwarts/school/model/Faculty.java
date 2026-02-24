@@ -1,38 +1,42 @@
 package ru.hogwarts.school.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Faculty {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "faculty_seq")
+    private Long id;
     private String name;
     private String color;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "faculty")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "faculty", cascade = CascadeType.ALL, orphanRemoval = true )
     @JsonBackReference
-    private Collection<Student> students;
+    private Collection<Student> students = new ArrayList<>();
 
     public Faculty() {
     }
-//    public Faculty(String name, String color, Collection<Student> students) {
-//        this.id = 0;
+
+    public Faculty(String name, String color) {
+        this.name = name;
+        this.color = color;
+    }
+
+//    public Faculty(long id, String name, String color, Collection<Student> students) {
+//        this.id = id;
 //        this.name = name;
 //        this.color = color;
 //        this.students = students;
 //    }
-    public Faculty(long id, String name, String color, Collection<Student> students) {
-        this.id = id;
-        this.name = name;
-        this.color = color;
-        this.students = students;
+
+    // Хелпер для синхронизации (ОБЯЗАТЕЛЬНО!)
+    public void addStudent(Student student) {
+        students.add(student);
+        student.setFaculty(this);
     }
 
     @Override
@@ -53,11 +57,11 @@ public class Faculty {
         this.students = students;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
