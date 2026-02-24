@@ -9,21 +9,23 @@ import java.util.*;
 @Entity
 public class Faculty {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "faculty_seq")
+    @GeneratedValue
     private Long id;
     private String name;
     private String color;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "faculty", cascade = CascadeType.ALL, orphanRemoval = true )
-    @JsonBackReference
+    @OneToMany( mappedBy = "faculty")
+    @JsonIgnore
     private Collection<Student> students = new ArrayList<>();
 
     public Faculty() {
     }
 
     public Faculty(String name, String color) {
+        this.id = 0L;
         this.name = name;
         this.color = color;
+        this.students = students;
     }
 
 //    public Faculty(long id, String name, String color, Collection<Student> students) {
@@ -33,11 +35,11 @@ public class Faculty {
 //        this.students = students;
 //    }
 
-    // Хелпер для синхронизации (ОБЯЗАТЕЛЬНО!)
-    public void addStudent(Student student) {
-        students.add(student);
-        student.setFaculty(this);
-    }
+//    // Хелпер для синхронизации (ОБЯЗАТЕЛЬНО!)
+//    public void addStudent(Student student) {
+//        students.add(student);
+//        student.setFaculty(this);
+//    }
 
     @Override
     public String toString() {
