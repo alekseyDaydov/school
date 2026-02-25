@@ -67,10 +67,7 @@ public class FacultyControllerTest {
     @DisplayName("POST - Добавление факультета")
     void testCreateFaculty() throws Exception {
         String url = "http://localhost:" + port + "/faculty";
-        Faculty faculty = new Faculty("It", "red");
-//        faculty.setName("it");
-//        faculty.setColor("red");
-
+        Faculty faculty = new Faculty(0L,"It", "red", new ArrayList<>());
         Faculty addFaculty = this.testRestTemplate.postForObject(url, faculty, Faculty.class);
 
 //       Проверяю, что не добавлен пустой объект
@@ -105,14 +102,10 @@ public class FacultyControllerTest {
     @DisplayName("PUT Обновление данных по факультету")
     void tesUpdateFaculty() throws Exception {
         String url = "http://localhost:" + port + "/faculty";
-
-//        Faculty faculty = new Faculty(0, "ItFaculty", "blue", null);
-        Faculty faculty = new Faculty("ItFaculty", "blue");
-
+        Faculty faculty = new Faculty(0, "ItFaculty", "blue", new ArrayList<>());
         Faculty createdFaculty = testRestTemplate.postForObject(url, faculty, Faculty.class);
 
 //        обновляю данные факультета
-//        Faculty updateFaculty = new Faculty(createdFaculty.getId(), "OIT", "red", null);
         Faculty updateFaculty = new Faculty( );
         updateFaculty.setId(createdFaculty.getId());
         updateFaculty.setName("OIT");
@@ -133,7 +126,7 @@ public class FacultyControllerTest {
     @DisplayName("Delete Удаление данных по факультету")
     void testDeleteFaculty() throws Exception {
         String url = "http://localhost:" + port + "/faculty";
-        Faculty faculty = new Faculty( "ItFaculty", "blue");
+        Faculty faculty = new Faculty(0L, "ItFaculty", "blue",new ArrayList<>());
 //        создали
         Faculty createdFaculty = testRestTemplate.postForObject(url, faculty, Faculty.class);
         url = "http://localhost:" + port + "/faculty/" + createdFaculty.getId();
@@ -152,8 +145,8 @@ public class FacultyControllerTest {
     void testFilterColorByColor() throws Exception {
 
 //        создали 2 записи в БД
-        Faculty faculty = new Faculty( "ItFaculty", "blue");
-        Faculty faculty2 = new Faculty( "OIT", "blue");
+        Faculty faculty = new Faculty( 0L,"ItFaculty", "blue", new ArrayList<>());
+        Faculty faculty2 = new Faculty(0L, "OIT", "blue", new ArrayList<>());
         String url = "http://localhost:" + port + "/faculty";
         // добавили
         Faculty createdFaculty = testRestTemplate.postForObject(url, faculty, Faculty.class);
@@ -178,8 +171,8 @@ public class FacultyControllerTest {
     void testFilterColorByColorOrName() throws Exception {
         //        создали 2 записи в БД
         final String FIND_ORANGE = "orange";
-        Faculty faculty = new Faculty("ItOrange", "blue");
-        Faculty faculty2 = new Faculty( "Blue", "orange");
+        Faculty faculty = new Faculty(0L,"ItOrange", "blue", new ArrayList<>());
+        Faculty faculty2 = new Faculty(0L, "Blue", "orange", new ArrayList<>());
         String url = "http://localhost:" + port + "/faculty";
 
         // добавили
@@ -201,59 +194,26 @@ public class FacultyControllerTest {
     }
 
     @Test
-    @DisplayName("Get- Поиск по id студента")
+    @DisplayName("Get- Поиск  факультета по id студента")
     void testFilterColorIdStudent() throws Exception {
-//        Student student = new Student("Gtnz", 25);  // Без id и faculty!
-//        Faculty faculty = new Faculty("123", "234");
-//
-//        Faculty savedFaculty = facultyRepository.save(faculty);
-//
-//        savedFaculty.addStudent(student);  // Синхронизирует ОБЕ стороны!
-//
-//        Student createdStudent = studentRepository.save(student);  // Каскад работает!
-//
-//// Проверка foreign key
-//        Assertions.assertThat(createdStudent.getFaculty()).isEqualTo(savedFaculty);
-//
-//// Ваш REST-эндпоинт
-//        String url1 = "http://localhost:" + port + "/faculty?idStudent=" + createdStudent.getId();
-//        ResponseEntity<List<Faculty>> response = this.testRestTemplate.exchange(url1, HttpMethod.GET, null,
-//                new ParameterizedTypeReference<List<Faculty>>() {});
-//        System.out.println(response.getBody());
+        Faculty faculty = new Faculty(0,"It", "blue",new ArrayList<>());
+        Student student = new Student(0,"Pety", 25, null);  // Без id и faculty!
 
+        Faculty savedFaculty = facultyRepository.save(faculty);
 
+        savedFaculty.getStudents().add(student);
 
-//        Assertions.assertThat(response.getBody()).containsExactly(savedFaculty);
-//
-//        //        создали записи в БД
-//        Student student = new Student(0, "Gtnz", 25, null);
-//        Faculty faculty = new Faculty(0, "123", "234", new ArrayList<>());
-//// сохраняем факультет
-//        Faculty createFaculty = facultyRepository.save(faculty);
-//
-//        // синхронизация
-//        student.setFaculty(createFaculty);
-//        createFaculty.getStudents().add(student);
-//
-//        Student createdStudent =  studentRepository.save(student);
-//
-//        Assertions.assertThat(createdStudent.getFaculty().getId()).isEqualTo(createFaculty.getId());
-//        createdStudent.setFaculty(createFaculty);
-//
-////        String url = "http://localhost:" + port + "/student";
-////        Student createdStudent = this.testRestTemplate.postForObject(url, student, Student.class);
-////        Assertions.assertThat(createdStudent).isNotNull();
-//
-//        String url1 = "http://localhost:" + port + "/faculty?idStudent=" + createdStudent.getId();
-//        ResponseEntity<List<Faculty>> response = this.testRestTemplate.exchange(url1, HttpMethod.GET, null, new ParameterizedTypeReference<List<Faculty>>() {
-//        });
-//
-//        System.out.println(response.getBody());
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        Assertions.assertThat(response.getBody())
-//                .isNotNull()
-//                .isEqualTo(List.of(createFaculty));
+        Student createdStudent = studentRepository.save(student);  // Каскад работает!
+        createdStudent.setFaculty(savedFaculty);
 
+        String url1 = "http://localhost:" + port + "/faculty?idStudent=" + createdStudent.getId();
+        ResponseEntity<List<Faculty>> response = this.testRestTemplate.exchange(url1, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<Faculty>>() {});
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertThat(response.getBody())
+                .isNotNull()
+                .isEqualTo(List.of(savedFaculty));
     }
 }
 

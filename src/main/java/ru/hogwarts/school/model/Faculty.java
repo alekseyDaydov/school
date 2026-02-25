@@ -9,37 +9,24 @@ import java.util.*;
 @Entity
 public class Faculty {
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO )
+    private long id;
     private String name;
     private String color;
 
-    @OneToMany( mappedBy = "faculty")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "faculty")
     @JsonIgnore
     private Collection<Student> students = new ArrayList<>();
 
     public Faculty() {
     }
 
-    public Faculty(String name, String color) {
-        this.id = 0L;
+    public Faculty(long id, String name, String color, Collection<Student> students) {
+        this.id = id;
         this.name = name;
         this.color = color;
         this.students = students;
     }
-
-//    public Faculty(long id, String name, String color, Collection<Student> students) {
-//        this.id = id;
-//        this.name = name;
-//        this.color = color;
-//        this.students = students;
-//    }
-
-//    // Хелпер для синхронизации (ОБЯЗАТЕЛЬНО!)
-//    public void addStudent(Student student) {
-//        students.add(student);
-//        student.setFaculty(this);
-//    }
 
     @Override
     public String toString() {
@@ -59,11 +46,11 @@ public class Faculty {
         this.students = students;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
