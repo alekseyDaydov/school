@@ -21,9 +21,9 @@ public class StudentService {
     @Value("${path.to.avatars.folder}")
     private String avatarsDir;
 
-
     private final StudentRepository studentRepository;
     private final AvatarRepository avatarRepository;
+
     public StudentService(StudentRepository studentRepository,  AvatarRepository avatarRepository) {
         this.studentRepository = studentRepository;
         this.avatarRepository = avatarRepository;
