@@ -44,11 +44,11 @@ public class FacultyController {
 
     @PutMapping()
     public ResponseEntity<Faculty> updateFaculty(@RequestBody Faculty faculty) {
-        Faculty faculty1 = facultyService.updateFaculty(faculty);
-        if (faculty == null) {
+        Faculty editFaculty = facultyService.updateFaculty(faculty);
+        if (editFaculty == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(faculty);
+        return ResponseEntity.ok(editFaculty);
     }
 
     @DeleteMapping("{id}")
@@ -58,9 +58,7 @@ public class FacultyController {
     }
 
     @GetMapping()
-    public ResponseEntity<Collection<Faculty>> filterColor(@RequestParam(required = false) String color,
-                                                           @RequestParam(required = false) String find,
-                                                           @RequestParam(required = false) Integer idStudent) {
+    public ResponseEntity<Collection<Faculty>> filterColor(@RequestParam(required = false) String color, @RequestParam(required = false) String find, @RequestParam(required = false) Integer idStudent) {
         if (color != null && !color.isBlank()) {
             return ResponseEntity.ok(facultyService.filterColor(color));
         }
@@ -76,9 +74,10 @@ public class FacultyController {
          return ResponseEntity.ok(faculties);
         }
 
-        if (color == null && find == null) {
+        if (color == null && find == null && idStudent == null) {
             return ResponseEntity.badRequest().build();
         }
+
         return ResponseEntity.ok(Collections.emptyList());
     }
 
@@ -90,5 +89,4 @@ public class FacultyController {
         }
         return ResponseEntity.ok(faculties);
     }
-
 }

@@ -61,8 +61,8 @@ public class StudentService {
         return studentRepository.findByAgeBetween(min, max);
     }
 
-    public Student getById(int id){
-        return studentRepository.findFacultyById(id).get();
+    public Student getById(long id){
+        return studentRepository.findById(id).get();
     }
     public Avatar findAvatar(long studentId) {
         return avatarRepository.findByStudentId(studentId).orElseThrow();
