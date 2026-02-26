@@ -9,12 +9,12 @@ import java.util.*;
 @Entity
 public class Faculty {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "faculty_seq" )
     private long id;
     private String name;
     private String color;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "faculty")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "faculty", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Collection<Student> students = new ArrayList<>();
 

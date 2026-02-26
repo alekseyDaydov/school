@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("student")
@@ -69,7 +70,7 @@ public class StudentController {
                                                          @RequestParam(required = false) Integer max,
                                                          @RequestParam(required = false) Integer idFaculty) {
         if (idFaculty != null && idFaculty.longValue() > 0) {
-            Faculty faculty =   facultyService.findFaculty(idFaculty);
+            Faculty faculty = facultyService.findFaculty(idFaculty);
             faculty.getStudents();
             return ResponseEntity.ok(facultyService.findFaculty(idFaculty).getStudents());
         }
@@ -130,4 +131,22 @@ public class StudentController {
         }
     }
 
+    @GetMapping(value = "/averageAge")
+    public ResponseEntity<Float> getAverageAgeStudent() {
+        Float average = studentService.getAverageAgeStudent();
+        if (average == null) {
+            average = 0.0F;
+        }
+        return ResponseEntity.ok(average);
+    }
+
+    @GetMapping(value = "/fiveStudent")
+    public ResponseEntity<Collection<Student>> getLastFiveStudent() {
+        return ResponseEntity.ok(studentService.getLastFiveStudent());
+    }
+
+    @GetMapping(value = "/getCount")
+    public ResponseEntity<Long> getCountStudent() {
+        return ResponseEntity.ok(studentService.getCountStudent());
+    }
 }
