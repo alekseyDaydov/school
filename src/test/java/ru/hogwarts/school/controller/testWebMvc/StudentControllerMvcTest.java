@@ -65,8 +65,6 @@ public class StudentControllerMvcTest {
     @Test
     @DisplayName("Get - Найти Студента по Id")
     void testGetStudentInfo() throws Exception {
-//        Student student = new Student("Тестовый_Студент2", 13);
-//        student.setId(1L);
 
         when(studentService.findByStudent(1L)).thenReturn(student1);
 
