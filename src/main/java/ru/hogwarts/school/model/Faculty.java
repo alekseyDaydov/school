@@ -1,24 +1,22 @@
 package ru.hogwarts.school.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 public class Faculty {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO )
     private long id;
     private String name;
     private String color;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "faculty", cascade = CascadeType.ALL)
-    @JsonBackReference
-    private Collection<Student> students;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "faculty")
+    @JsonIgnore
+    private Collection<Student> students = new ArrayList<>();
 
     public Faculty() {
     }

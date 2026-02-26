@@ -9,27 +9,36 @@ import java.util.Objects;
 
 @Entity
 public class Student {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
     private int age;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "faculty_id")
-   @JsonManagedReference
-
     private Faculty faculty;
 
     public Student() {
     }
-
+//
+//    public Student(String name, int age) {
+//        this.name = name;
+//        this.age = age;
+//    }
+//    public Student(String name, int age, Faculty faculty) {
+//        this.id = 0L;
+//        this.name = name;
+//        this.age = age;
+//    }
     public Student(long id, String name, int age, Faculty faculty) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.faculty = faculty;
     }
+
 
     public Faculty getFaculty() {
         return faculty;
