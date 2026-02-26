@@ -1,11 +1,13 @@
 package ru.hogwarts.school.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Arrays;
 import java.util.Objects;
 
 @Entity
+@Table(name = "avatar")
 public class Avatar {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -14,6 +16,7 @@ public class Avatar {
     private long fileSize;
     private String mediaType;
 
+    @JsonIgnore
     @Lob
     private byte[] data;
 

@@ -107,7 +107,7 @@ public class StudentService {
     public List<Student> getLastFiveStudent() {
         return studentRepository.getLastFiveStudent();
     }
-//
+
     public Float getAverageAgeStudent() {
         return studentRepository.getAverageAgeStudent();
     }
