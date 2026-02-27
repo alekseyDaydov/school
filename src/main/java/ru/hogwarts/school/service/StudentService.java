@@ -1,6 +1,7 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.model.Avatar;
@@ -12,6 +13,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -24,7 +26,7 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final AvatarRepository avatarRepository;
 
-    public StudentService(StudentRepository studentRepository,  AvatarRepository avatarRepository) {
+    public StudentService(StudentRepository studentRepository, AvatarRepository avatarRepository) {
         this.studentRepository = studentRepository;
         this.avatarRepository = avatarRepository;
     }
@@ -57,13 +59,14 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public Collection<Student> findByAgeBetween(int min, int max){
+    public Collection<Student> findByAgeBetween(int min, int max) {
         return studentRepository.findByAgeBetween(min, max);
     }
 
-    public Student getById(long id){
-        return studentRepository.findById(id).get();
+    public Student getById(int id) {
+        return studentRepository.findFacultyById(id).get();
     }
+
     public Avatar findAvatar(long studentId) {
         return avatarRepository.findByStudentId(studentId).orElseThrow();
     }
@@ -95,5 +98,17 @@ public class StudentService {
 
     private String getExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
+
+    public Long getCountStudent() {
+        return studentRepository.getCountStudent();
+    }
+
+    public List<Student> getLastFiveStudent() {
+        return studentRepository.getLastFiveStudent();
+    }
+
+    public Float getAverageAgeStudent() {
+        return studentRepository.getAverageAgeStudent();
     }
 }

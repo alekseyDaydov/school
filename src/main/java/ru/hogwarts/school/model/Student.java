@@ -8,30 +8,22 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Table(name ="student")
 public class Student {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "student_seq")
     private long id;
     private String name;
     private int age;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
 
     public Student() {
     }
-//
-//    public Student(String name, int age) {
-//        this.name = name;
-//        this.age = age;
-//    }
-//    public Student(String name, int age, Faculty faculty) {
-//        this.id = 0L;
-//        this.name = name;
-//        this.age = age;
-//    }
+
     public Student(long id, String name, int age, Faculty faculty) {
         this.id = id;
         this.name = name;
@@ -90,7 +82,7 @@ public class Student {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
-                ", faculty=" + faculty
+                ", faculty=" //+ faculty
                 ;
     }
 }
