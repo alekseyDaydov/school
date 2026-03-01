@@ -1,5 +1,7 @@
 package ru.hogwarts.school.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 @Service
 public class StudentService {
+    Logger logger = LoggerFactory.getLogger(StudentService.class);
+    String CREATE_TEXT_INFO = "Was invoked method for {}";
 
     @Value("${path.to.avatars.folder}")
     private String avatarsDir;
@@ -33,45 +37,55 @@ public class StudentService {
 
     //    Create
     public Student createStudent(Student student) {
+        logger.info(CREATE_TEXT_INFO, "createStudent");
         return studentRepository.save(student);
     }
 
     //    read
     public Student findByStudent(long id) {
+        logger.info(CREATE_TEXT_INFO, "findByStudent");
         return studentRepository.findById(id).orElse(null);
     }
 
     //update
     public Student updateStudent(Student student) {
+        logger.info(CREATE_TEXT_INFO, "updateStudent");
         return studentRepository.save(student);
     }
 
     //delete
     public void deleteStudent(Long id) {
+        logger.info(CREATE_TEXT_INFO, "deleteStudent");
         studentRepository.deleteById(id);
     }
 
     public Collection<Student> filterAge(int age) {
+        logger.info(CREATE_TEXT_INFO, "filterAge");
         return studentRepository.findByAge(age);
     }
 
     public Collection<Student> getAll() {
+        logger.info(CREATE_TEXT_INFO, "getAll");
         return studentRepository.findAll();
     }
 
     public Collection<Student> findByAgeBetween(int min, int max) {
+        logger.info(CREATE_TEXT_INFO, "findByAgeBetween");
         return studentRepository.findByAgeBetween(min, max);
     }
 
     public Student getById(int id) {
+        logger.info(CREATE_TEXT_INFO, "getById");
         return studentRepository.findFacultyById(id).get();
     }
 
     public Avatar findAvatar(long studentId) {
+        logger.info(CREATE_TEXT_INFO, "findAvatar");
         return avatarRepository.findByStudentId(studentId).orElseThrow();
     }
 
     public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
+        logger.info(CREATE_TEXT_INFO, "uploadAvatar");
         Student student = findByStudent(studentId);
 
         Path filePath = Path.of(avatarsDir, studentId + "." + getExtension(file.getOriginalFilename()));
@@ -101,14 +115,17 @@ public class StudentService {
     }
 
     public Long getCountStudent() {
+        logger.info(CREATE_TEXT_INFO, "getCountStudent");
         return studentRepository.getCountStudent();
     }
 
     public List<Student> getLastFiveStudent() {
+        logger.info(CREATE_TEXT_INFO, "getLastFiveStudent");
         return studentRepository.getLastFiveStudent();
     }
 
     public Float getAverageAgeStudent() {
+        logger.info(CREATE_TEXT_INFO, "getAverageAgeStudent");
         return studentRepository.getAverageAgeStudent();
     }
 }
