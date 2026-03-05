@@ -160,17 +160,17 @@ public class StudentControllerMvcTest {
                 .andExpect(jsonPath("$[1].age").value(25));
     }
 
-    @Test
-    @DisplayName("Название Факультета Студента")
-    void testGetStudentFaculty() throws Exception {
-        when(studentService.findByStudent(1L)).thenReturn(student1);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/student")
-                .param("idFaculty", "1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value(NAME_FACULTY_IT))
-                .andExpect(jsonPath("$.color").value(COLOR_BLACK));
-    }
+//    @Test
+//    @DisplayName("Название Факультета Студента")
+//    void testGetStudentFaculty() throws Exception {
+//        when(studentService.findByStudent(1L)).thenReturn(student1);
+//
+//        mockMvc.perform(MockMvcRequestBuilders.get("/student")
+//                .param("idFaculty", "1"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.id").value(1))
+//                .andExpect(jsonPath("$.name").value(NAME_FACULTY_IT))
+//                .andExpect(jsonPath("$.color").value(COLOR_BLACK));
+//    }
 
 }

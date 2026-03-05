@@ -16,8 +16,7 @@ public class InfoControllerImpl implements InfoController {
     public InfoControllerImpl(InfoService infoService) {
         this.infoService = infoService;
     }
-    @Value("${weather-forecast-service.url}")
-    private String url;
+
     @Value("${constant.text}")
     private String create_text;
     Logger logger = LoggerFactory.getLogger(AvatarService.class);
