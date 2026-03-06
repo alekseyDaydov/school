@@ -7,24 +7,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.hogwarts.school.service.AvatarService;
-import ru.hogwarts.school.service.InfoService;
 
 @RestController
 public class InfoControllerImpl implements InfoController {
-    private InfoService infoService;
-
-    public InfoControllerImpl(InfoService infoService) {
-        this.infoService = infoService;
-    }
-
     @Value("${constant.text}")
     private String create_text;
+
     Logger logger = LoggerFactory.getLogger(AvatarService.class);
 
+    @Value("${server.port}")
+    private String serverPort;
+
+    @Value("${spring.profiles.active:default}")
+    private String activeProfile;
+
     @GetMapping("/port")
-    public ResponseEntity<Integer> getPort() {
-        logger.info(create_text, "get port");
-        Integer port = infoService.getPort();
-        return ResponseEntity.ok(port);
+    public ResponseEntity<String> getPort() {
+        logger.info(create_text, "get port", serverPort, activeProfile);
+        String text = "active port {}, profile {}", serverPort , activeProfile;
+        return ResponseEntity.ok(text);
     }
 }
