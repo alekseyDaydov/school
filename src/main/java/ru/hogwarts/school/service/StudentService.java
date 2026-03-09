@@ -23,6 +23,7 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 public class StudentService {
     Logger logger = LoggerFactory.getLogger(StudentService.class);
     String CREATE_TEXT_INFO = "Was invoked method for {}";
+    String CREATE_TEXT_ERROR = "There is not student with id = {}";
 
     @Value("${path.to.avatars.folder}")
     private String avatarsDir;
@@ -38,24 +39,28 @@ public class StudentService {
     //    Create
     public Student createStudent(Student student) {
         logger.info(CREATE_TEXT_INFO, "createStudent");
+
         return studentRepository.save(student);
     }
 
     //    read
     public Student findByStudent(long id) {
         logger.info(CREATE_TEXT_INFO, "findByStudent");
+        logger.error(CREATE_TEXT_ERROR, id);
         return studentRepository.findById(id).orElse(null);
     }
 
     //update
     public Student updateStudent(Student student) {
         logger.info(CREATE_TEXT_INFO, "updateStudent");
+
         return studentRepository.save(student);
     }
 
     //delete
     public void deleteStudent(Long id) {
         logger.info(CREATE_TEXT_INFO, "deleteStudent");
+        logger.error(CREATE_TEXT_ERROR, id);
         studentRepository.deleteById(id);
     }
 
@@ -76,6 +81,7 @@ public class StudentService {
 
     public Student getById(int id) {
         logger.info(CREATE_TEXT_INFO, "getById");
+        logger.error(CREATE_TEXT_ERROR, id);
         return studentRepository.findFacultyById(id).get();
     }
 

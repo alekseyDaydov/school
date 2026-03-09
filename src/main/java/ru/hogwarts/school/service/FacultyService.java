@@ -12,8 +12,9 @@ import java.util.List;
 @Service
 public class FacultyService {
     Logger logger = LoggerFactory.getLogger(FacultyService.class);
-
     String CREATE_TEXT_INFO = "Was invoked method for {}";
+    String CREATE_TEXT_ERROR = "There is not student with id = {}";
+
     private FacultyRepository facultyRepository;
 
     public FacultyService(FacultyRepository facultyRepository) {
@@ -29,6 +30,7 @@ public class FacultyService {
     //    read
     public Faculty findFaculty(long id) {
         logger.info(CREATE_TEXT_INFO, "findFaculty");
+        logger.error(CREATE_TEXT_ERROR, id);
         return facultyRepository.findById(id).orElse(null);
     }
 
@@ -41,6 +43,7 @@ public class FacultyService {
     //delete
     public void deleteFaculty(long id) {
         logger.info(CREATE_TEXT_INFO, "deleteFaculty");
+        logger.error(CREATE_TEXT_ERROR, id);
         facultyRepository.deleteById(id);
     }
 

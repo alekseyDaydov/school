@@ -24,7 +24,6 @@ public class InfoControllerImpl implements InfoController {
     @GetMapping("/port")
     public ResponseEntity<String> getPort() {
         logger.info(create_text, "get port", serverPort, activeProfile);
-        String text = "active port {}, profile {}", serverPort , activeProfile;
-        return ResponseEntity.ok(text);
+        return ResponseEntity.ok(serverPort);
     }
 }
