@@ -26,9 +26,16 @@ dependencies {
 	implementation 'org.postgresql:postgresql' //:42.7.7")
 // Source: https://mvnrepository.com/artifact/org.liquibase/liquibase-core
 	implementation 'org.liquibase:liquibase-core'
+	implementation 'org.apache.logging.log4j:log4j-core:2.16.0'
+	implementation 'org.apache.logging.log4j:log4j-api:2.16.0'
+	implementation 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
 
 }
 
