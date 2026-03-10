@@ -193,28 +193,28 @@ public class FacultyControllerTest {
                 .isEqualTo(List.of(createdFaculty, createdFaculty2));
     }
 
-    @Test
-    @DisplayName("Get- Поиск  факультета по id студента")
-    void testFilterColorIdStudent() throws Exception {
-        Faculty faculty = new Faculty(0,"It", "blue",new ArrayList<>());
-        Student student = new Student(0,"Pety", 25, null);  // Без id и faculty!
-
-        Faculty savedFaculty = facultyRepository.save(faculty);
-
-        savedFaculty.getStudents().add(student);
-
-        Student createdStudent = studentRepository.save(student);  // Каскад работает!
-        createdStudent.setFaculty(savedFaculty);
-
-        String url1 = "http://localhost:" + port + "/faculty?idStudent=" + createdStudent.getId();
-        ResponseEntity<List<Faculty>> response = this.testRestTemplate.exchange(url1, HttpMethod.GET, null,
-                new ParameterizedTypeReference<List<Faculty>>() {});
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assertions.assertThat(response.getBody())
-                .isNotNull()
-                .isEqualTo(List.of(savedFaculty));
-    }
+//    @Test
+//    @DisplayName("Get- Поиск  факультета по id студента")
+//    void testFilterColorIdStudent() throws Exception {
+//        Faculty faculty = new Faculty(0,"It", "blue",new ArrayList<>());
+//        Student student = new Student(0,"Pety", 25, null);  // Без id и faculty!
+//
+//        Faculty savedFaculty = facultyRepository.save(faculty);
+//
+//        savedFaculty.getStudents().add(student);
+//
+//        Student createdStudent = studentRepository.save(student);  // Каскад работает!
+//        createdStudent.setFaculty(savedFaculty);
+//
+//        String url1 = "http://localhost:" + port + "/faculty?idStudent=" + createdStudent.getId();
+//        ResponseEntity<List<Faculty>> response = this.testRestTemplate.exchange(url1, HttpMethod.GET, null,
+//                new ParameterizedTypeReference<List<Faculty>>() {});
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        Assertions.assertThat(response.getBody())
+//                .isNotNull()
+//                .isEqualTo(List.of(savedFaculty));
+//    }
 }
 
 

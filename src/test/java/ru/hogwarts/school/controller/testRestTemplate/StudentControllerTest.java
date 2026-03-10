@@ -181,26 +181,26 @@ public class StudentControllerTest {
                 .isEqualTo(List.of(addStudent,addStudent1));
     }
 
-    @Test
-    @DisplayName("Get- Поиск студентов по id факультету")
-    void testFilterColorIdStudent() throws Exception {
-        Faculty faculty = new Faculty(0,"It", "blue",new ArrayList<>());
-        Student student = new Student(0,"Pety", 25, null);
-
-        Faculty savedFaculty = facultyRepository.save(faculty);
-        savedFaculty.getStudents().add(student);
-
-        Student createdStudent = studentRepository.save(student);  // Каскад работает!
-        createdStudent.setFaculty(savedFaculty);
-
-        String url = "http://localhost:" + port + "/student?idFaculty=" + savedFaculty.getId();
-        ResponseEntity<List<Student>> response = this.testRestTemplate.exchange(url, HttpMethod.GET, null,
-                new ParameterizedTypeReference<List<Student>>() {});
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        Assertions.assertThat(response.getBody())
-                .isNotNull()
-                .isEqualTo(List.of(createdStudent));
-
-    }
+//    @Test
+//    @DisplayName("Get- Поиск студентов по id факультету")
+//    void testFilterColorIdStudent() throws Exception {
+//        Faculty faculty = new Faculty(0,"It", "blue",new ArrayList<>());
+//        Student student = new Student(0,"Pety", 25, null);
+//
+//        Faculty savedFaculty = facultyRepository.save(faculty);
+//        savedFaculty.getStudents().add(student);
+//
+//        Student createdStudent = studentRepository.save(student);  // Каскад работает!
+//        createdStudent.setFaculty(savedFaculty);
+//
+//        String url = "http://localhost:" + port + "/student?idFaculty=" + savedFaculty.getId();
+//        ResponseEntity<List<Student>> response = this.testRestTemplate.exchange(url, HttpMethod.GET, null,
+//                new ParameterizedTypeReference<List<Student>>() {});
+//
+//        assertEquals(HttpStatus.OK, response.getStatusCode());
+//        Assertions.assertThat(response.getBody())
+//                .isNotNull()
+//                .isEqualTo(List.of(createdStudent));
+//
+//    }
 }

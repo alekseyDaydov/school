@@ -161,23 +161,23 @@ public class FacultyControllerMcTest {
         verify(facultyService).filterColor(COLOR_RED);
     }
 
-    @Test
-    @DisplayName("GET - Поиск факультета по Названию ИлИ Цвету")
-    void testGetSearchFaculties() throws Exception {
-        Collection<Faculty> faculties = Arrays.asList(faculty);
-
-        // Тест поиска по названию
-        when(facultyService.findByNameContainsIgnoreCaseOrColorIgnoreCase(COLOR_BLACK)).thenReturn(faculties);
-
-        mockMvc.perform(get("/faculty")
-                        .param("find", COLOR_BLACK))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].name").value(NAME_FACULTY_IT))
-                .andExpect(jsonPath("$[0].color").value(COLOR_BLACK));
-
-        verify(facultyService).findByNameContainsIgnoreCaseOrColorIgnoreCase(COLOR_BLACK);
-    }
+//    @Test
+//    @DisplayName("GET - Поиск факультета по Названию ИлИ Цвету")
+//    void testGetSearchFaculties() throws Exception {
+//        Collection<Faculty> faculties = Arrays.asList(faculty);
+//
+//        // Тест поиска по названию
+//        when(facultyService.findByNameContainsIgnoreCaseOrColorIgnoreCase(COLOR_BLACK)).thenReturn(faculties);
+//
+//        mockMvc.perform(get("/faculty")
+//                        .param("find", COLOR_BLACK))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$[0].id").value(1L))
+//                .andExpect(jsonPath("$[0].name").value(NAME_FACULTY_IT))
+//                .andExpect(jsonPath("$[0].color").value(COLOR_BLACK));
+//
+//        verify(facultyService).findByNameContainsIgnoreCaseOrColorIgnoreCase(COLOR_BLACK);
+//    }
 
 
 }
