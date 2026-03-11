@@ -35,15 +35,20 @@ public class FacultyController {
 
     @GetMapping("/sum")
     public ResponseEntity<String> getSum() {
+        long startTime = System.currentTimeMillis();
+// код, время выполнения которого измеряется
         int sum = Stream.iterate(1, a -> a +1)
                   .limit(1_000_000)
                   .reduce(0, (a, b) -> a + b );
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
 
+        long startTimeRef = System.currentTimeMillis();
         int sumRefactoring = IntStream.rangeClosed(1, 1_000_000)
-                .parallel()
                 .sum();
-
-        return ResponseEntity.ok("sum = " + sum + ", sumRefactoring = " + sumRefactoring);
+        long endTimeRef = System.currentTimeMillis();
+        long executionTimeRef = endTimeRef - startTimeRef;
+        return ResponseEntity.ok("sum = " + sum + " время выполнения " + executionTime + ", sumRefactoring = " + sumRefactoring + "время выполнения = " + executionTimeRef  );
     }
 
     @PostMapping()

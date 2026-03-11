@@ -30,10 +30,84 @@ import static com.fasterxml.jackson.databind.type.LogicalType.Map;
 public class StudentController {
     private final StudentService studentService;
     private final FacultyService facultyService;
+    private int count;
+    public Object flag = new Object();
 
     public StudentController(StudentService studentService, FacultyService facultyService) {
         this.studentService = studentService;
         this.facultyService = facultyService;
+    }
+
+    @GetMapping("/print-parallel")
+    public ResponseEntity<Void> getPrintParallel() {
+        StudentController studentController = new StudentController(studentService, facultyService);
+        List<String> nameList = studentService.getAll()
+                .stream()
+                .map(Student::getName)
+                .collect(Collectors.toList());
+
+        studentController.printMessageParallel(nameList.get(0), 1);
+        studentController.printMessageParallel(nameList.get(1), 2);
+
+        new Thread(() -> {
+            studentController.printMessageParallel(nameList.get(2), 3);
+            studentController.printMessageParallel(nameList.get(3), 4);
+        }).start();
+
+        Thread thread2 = new Thread() {
+            @Override
+            public void run() {
+                studentController.printMessageParallel(nameList.get(4), 5);
+                studentController.printMessageParallel(nameList.get(5), 6);
+            }
+        };
+        thread2.start();
+        return ResponseEntity.ok().build();
+    }
+
+    private void printMessageParallel(String name, int numberThread) {
+        System.out.println("name: " + name + ", numberThread= " + numberThread);
+        String s = "";
+        for (int i = 0; i < 100_000; i++) {
+            s += i;
+        }
+    }
+
+    @GetMapping("/print-synchronized")
+    public ResponseEntity<Void> getPrintSynchronized() {
+        StudentController studentController = new StudentController(studentService, facultyService);
+        List<String> nameList = studentService.getAll()
+                .stream()
+                .map(Student::getName)
+                .collect(Collectors.toList());
+        studentController.printMessageSynchronize(nameList.get(0), 1);
+        studentController.printMessageSynchronize(nameList.get(1), 2);
+
+        new Thread(() -> {
+            studentController.printMessageSynchronize(nameList.get(2), 3);
+            studentController.printMessageSynchronize(nameList.get(3), 4);
+        }).start();
+        Thread thread2 = new Thread() {
+            @Override
+            public void run() {
+                studentController.printMessageSynchronize(nameList.get(4), 5);
+                studentController.printMessageSynchronize(nameList.get(5), 6);
+            }
+        };
+        thread2.start();
+        return ResponseEntity.ok().build();
+    }
+
+    private void printMessageSynchronize(String name, int numberThread) {
+        synchronized (flag) {
+            System.out.println("name: " + name + ", numberThread= " + numberThread + ", count = " + count);
+            count++;
+        }
+        ;
+        String s = "";
+        for (int i = 0; i < 100_000; i++) {
+            s += i;
+        }
     }
 
     @GetMapping("findSymbol/StreamApi/{symbol}")
@@ -41,10 +115,10 @@ public class StudentController {
         List<String> nameStudent =
                 studentService.getAll()
                         .parallelStream()
-                        .map(element->element.getName().toUpperCase())
+                        .map(element -> element.getName().toUpperCase())
 //                        .map(Student::getName)
 //                        .map(String::toUpperCase)
-                        .filter(element->element.startsWith(symbol))
+                        .filter(element -> element.startsWith(symbol))
                         .sorted()
                         .collect(Collectors.toList());
         return ResponseEntity.ok(nameStudent);
