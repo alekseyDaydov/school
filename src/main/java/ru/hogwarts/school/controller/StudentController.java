@@ -35,6 +35,51 @@ public class StudentController {
         this.studentService = studentService;
         this.facultyService = facultyService;
     }
+   @GetMapping("/print-parallel")
+   public ResponseEntity<String> getPrintParallel(){
+//       Создать в StudentController эндпоинт GET /students/print-parallel.
+//
+//               Эндпоинт должен выводить в консоль имена всех студентов в параллельном режиме, а именно:
+//
+//       первые два имени вывести в основном потоке
+//       имена третьего и четвертого студента вывести в параллельном потоке
+//       имена пятого и шестого студента вывести в еще одном параллельном потоке.
+//               Для вывода используйте команду System.out.println().
+//
+//               В итоге в консоли должен появиться список из шести имен в порядке, возможно отличном от порядка в коллекции.
+        String  lv_text = "null";
+        List<String> nameList = studentService.getAll()
+                .parallelStream()
+                .map(Student::getName)
+                .collect(Collectors.toList());
+       System.out.println("Поток 1" + "name = " + nameList.get(0));
+       System.out.println("Поток 2" + "name = " + nameList.get(1));
+//     Thread thread1 = new Thread(){
+//         @Override
+//         public void run() {
+//             System.out.println("Поток 3" + "name = " + nameList.get(2));
+//         }
+//     }
+       System.out.println("Поток 1" + "name = " + nameList.get(0));
+        return ResponseEntity.ok(lv_text);
+   }
+
+   @GetMapping("/print-synchronized")
+   public ResponseEntity<String> getPrintSynchronized(){
+//       Создать в StudentController эндпоинт GET /students/print-synchronized.
+//
+//       Эндпоинт должен выводить в консоль имена всех студентов в синхронном режиме.
+//
+//               Для этого создайте отдельный синхронизированный метод для вывода имен в консоль.
+//
+//       Далее необходимо, используя ранее созданный синхронизированный метод :
+//
+//       первые два имени вывести в основном потоке
+//       имена третьего и четвертого студента в параллельном потоке
+//       имена пятого и шестого студента в еще одном параллельном потоке
+//       В итоге в консоли должен появиться список из шести имен в порядке, возможно отличном от порядка в коллекции.
+        return  null;
+   }
 
     @GetMapping("findSymbol/StreamApi/{symbol}")
     public ResponseEntity<List<String>> getNameSymbol(@PathVariable String symbol) {
