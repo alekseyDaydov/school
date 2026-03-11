@@ -7,10 +7,9 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("faculty")
@@ -23,14 +22,38 @@ public class FacultyController {
         this.studentService = studentService;
     }
 
+    @GetMapping("/longName")
+    public ResponseEntity<String> getLongName() {
+        String name = facultyService.getAll()
+                .parallelStream()
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length))
+                .orElse("Нет факультета");
+
+        return ResponseEntity.ok(name);
+    }
+
+    @GetMapping("/sum")
+    public ResponseEntity<String> getSum() {
+        int sum = Stream.iterate(1, a -> a +1)
+                  .limit(1_000_000)
+                  .reduce(0, (a, b) -> a + b );
+
+        int sumRefactoring = IntStream.rangeClosed(1, 1_000_000)
+                .parallel()
+                .sum();
+
+        return ResponseEntity.ok("sum = " + sum + ", sumRefactoring = " + sumRefactoring);
+    }
+
     @PostMapping()
     public Faculty createFaculty(@RequestBody Faculty faculty) {
         return facultyService.createFaculty(faculty);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Faculty> getFacultyInfo(@PathVariable(required = false) Long id ) {
-       Faculty faculty = new Faculty() ;
+    public ResponseEntity<Faculty> getFacultyInfo(@PathVariable(required = false) Long id) {
+        Faculty faculty = new Faculty();
         if (id != null && id > 0) {
             faculty = facultyService.findFaculty(id);
         }
@@ -71,7 +94,7 @@ public class FacultyController {
             Student student = studentService.findByStudent(idStudent);
             System.out.println(student.getId());
             Collection<Faculty> faculties = List.of(student.getFaculty());
-         return ResponseEntity.ok(faculties);
+            return ResponseEntity.ok(faculties);
         }
 
         if (color == null && find == null && idStudent == null) {

@@ -19,9 +19,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.fasterxml.jackson.databind.type.LogicalType.Map;
 
 @RestController
 @RequestMapping("student")
@@ -33,6 +34,31 @@ public class StudentController {
     public StudentController(StudentService studentService, FacultyService facultyService) {
         this.studentService = studentService;
         this.facultyService = facultyService;
+    }
+
+    @GetMapping("findSymbol/StreamApi/{symbol}")
+    public ResponseEntity<List<String>> getNameSymbol(@PathVariable String symbol) {
+        List<String> nameStudent =
+                studentService.getAll()
+                        .parallelStream()
+                        .map(element->element.getName().toUpperCase())
+//                        .map(Student::getName)
+//                        .map(String::toUpperCase)
+                        .filter(element->element.startsWith(symbol))
+                        .sorted()
+                        .collect(Collectors.toList());
+        return ResponseEntity.ok(nameStudent);
+    }
+
+    @GetMapping(value = "/averageAge/StreamApi")
+    public ResponseEntity<Double> getAverageAgeStudentStreamApi() {
+
+        Double average = studentService.getAll()
+                .parallelStream()
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0);
+        return ResponseEntity.ok(average);
     }
 
     @PostMapping()
