@@ -30,66 +30,95 @@ import static com.fasterxml.jackson.databind.type.LogicalType.Map;
 public class StudentController {
     private final StudentService studentService;
     private final FacultyService facultyService;
+    private int count;
+    public Object flag = new Object();
 
     public StudentController(StudentService studentService, FacultyService facultyService) {
         this.studentService = studentService;
         this.facultyService = facultyService;
     }
-   @GetMapping("/print-parallel")
-   public ResponseEntity<String> getPrintParallel(){
-//       Создать в StudentController эндпоинт GET /students/print-parallel.
-//
-//               Эндпоинт должен выводить в консоль имена всех студентов в параллельном режиме, а именно:
-//
-//       первые два имени вывести в основном потоке
-//       имена третьего и четвертого студента вывести в параллельном потоке
-//       имена пятого и шестого студента вывести в еще одном параллельном потоке.
-//               Для вывода используйте команду System.out.println().
-//
-//               В итоге в консоли должен появиться список из шести имен в порядке, возможно отличном от порядка в коллекции.
-        String  lv_text = "null";
+
+    @GetMapping("/print-parallel")
+    public ResponseEntity<Void> getPrintParallel() {
+        StudentController studentController = new StudentController(studentService, facultyService);
         List<String> nameList = studentService.getAll()
-                .parallelStream()
+                .stream()
                 .map(Student::getName)
                 .collect(Collectors.toList());
-       System.out.println("Поток 1" + "name = " + nameList.get(0));
-       System.out.println("Поток 2" + "name = " + nameList.get(1));
-//     Thread thread1 = new Thread(){
-//         @Override
-//         public void run() {
-//             System.out.println("Поток 3" + "name = " + nameList.get(2));
-//         }
-//     }
-       System.out.println("Поток 1" + "name = " + nameList.get(0));
-        return ResponseEntity.ok(lv_text);
-   }
 
-   @GetMapping("/print-synchronized")
-   public ResponseEntity<String> getPrintSynchronized(){
-//       Создать в StudentController эндпоинт GET /students/print-synchronized.
-//
-//       Эндпоинт должен выводить в консоль имена всех студентов в синхронном режиме.
-//
-//               Для этого создайте отдельный синхронизированный метод для вывода имен в консоль.
-//
-//       Далее необходимо, используя ранее созданный синхронизированный метод :
-//
-//       первые два имени вывести в основном потоке
-//       имена третьего и четвертого студента в параллельном потоке
-//       имена пятого и шестого студента в еще одном параллельном потоке
-//       В итоге в консоли должен появиться список из шести имен в порядке, возможно отличном от порядка в коллекции.
-        return  null;
-   }
+        studentController.printMessageParallel(nameList.get(0), 1);
+        studentController.printMessageParallel(nameList.get(1), 2);
+
+        new Thread(() -> {
+            studentController.printMessageParallel(nameList.get(2), 3);
+            studentController.printMessageParallel(nameList.get(3), 4);
+        }).start();
+
+        Thread thread2 = new Thread() {
+            @Override
+            public void run() {
+                studentController.printMessageParallel(nameList.get(4), 5);
+                studentController.printMessageParallel(nameList.get(5), 6);
+            }
+        };
+        thread2.start();
+        return ResponseEntity.ok().build();
+    }
+
+    private void printMessageParallel(String name, int numberThread) {
+        System.out.println("name: " + name + ", numberThread= " + numberThread);
+        String s = "";
+        for (int i = 0; i < 100_000; i++) {
+            s += i;
+        }
+    }
+
+    @GetMapping("/print-synchronized")
+    public ResponseEntity<Void> getPrintSynchronized() {
+        StudentController studentController = new StudentController(studentService, facultyService);
+        List<String> nameList = studentService.getAll()
+                .stream()
+                .map(Student::getName)
+                .collect(Collectors.toList());
+        studentController.printMessageSynchronize(nameList.get(0), 1);
+        studentController.printMessageSynchronize(nameList.get(1), 2);
+
+        new Thread(() -> {
+            studentController.printMessageSynchronize(nameList.get(2), 3);
+            studentController.printMessageSynchronize(nameList.get(3), 4);
+        }).start();
+        Thread thread2 = new Thread() {
+            @Override
+            public void run() {
+                studentController.printMessageSynchronize(nameList.get(4), 5);
+                studentController.printMessageSynchronize(nameList.get(5), 6);
+            }
+        };
+        thread2.start();
+        return ResponseEntity.ok().build();
+    }
+
+    private void printMessageSynchronize(String name, int numberThread) {
+        synchronized (flag) {
+            System.out.println("name: " + name + ", numberThread= " + numberThread + ", count = " + count);
+            count++;
+        }
+        ;
+        String s = "";
+        for (int i = 0; i < 100_000; i++) {
+            s += i;
+        }
+    }
 
     @GetMapping("findSymbol/StreamApi/{symbol}")
     public ResponseEntity<List<String>> getNameSymbol(@PathVariable String symbol) {
         List<String> nameStudent =
                 studentService.getAll()
                         .parallelStream()
-                        .map(element->element.getName().toUpperCase())
+                        .map(element -> element.getName().toUpperCase())
 //                        .map(Student::getName)
 //                        .map(String::toUpperCase)
-                        .filter(element->element.startsWith(symbol))
+                        .filter(element -> element.startsWith(symbol))
                         .sorted()
                         .collect(Collectors.toList());
         return ResponseEntity.ok(nameStudent);
